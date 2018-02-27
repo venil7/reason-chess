@@ -1,7 +1,4 @@
-type coord =
-  | Coord(int, int);
-
-type path = list(coord);
+open Game;
 
 exception InvalidIndex(int);
 
@@ -25,4 +22,16 @@ let indexOfCoord = (coord: coord) : int =>
   switch coord {
   | Coord(col, row) when validCoord(coord) => row * 8 + col
   | _ => raise(InvalidCoord(coord))
+  };
+
+let next = (direction: direction, coord: coord) : coord =>
+  switch (direction, coord) {
+  | (North, Coord(x, y)) => Coord(x, y - 1)
+  | (NorthEast, Coord(x, y)) => Coord(x + 1, y - 1)
+  | (East, Coord(x, y)) => Coord(x + 1, y)
+  | (SouthEast, Coord(x, y)) => Coord(x + 1, y + 1)
+  | (South, Coord(x, y)) => Coord(x, y + 1)
+  | (SouthWest, Coord(x, y)) => Coord(x - 1, y + 1)
+  | (West, Coord(x, y)) => Coord(x - 1, y)
+  | (NorthWest, Coord(x, y)) => Coord(x - 1, y - 1)
   };

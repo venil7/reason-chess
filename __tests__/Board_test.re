@@ -1,5 +1,7 @@
 open Jest;
 
+open Game;
+
 open Board;
 
 open Expect;

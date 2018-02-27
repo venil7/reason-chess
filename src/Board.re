@@ -1,29 +1,8 @@
+open Game;
+
 open Coord;
 
 exception InvalidMove(string);
-
-type player =
-  | Black
-  | White;
-
-type piece =
-  | Pawn
-  | Rook
-  | Knight
-  | Bishop
-  | Queen
-  | King;
-
-type cell =
-  | Empty
-  | Occupied(player, piece);
-
-type move = {
-  prev: coord,
-  next: coord
-};
-
-type board = list(cell);
 
 let side = 8;
 
@@ -68,3 +47,11 @@ let makeMove = ({prev, next}: move, board: board) => {
        }
      );
 };
+/* let possibleMoves = (coord: coord, board: board) : list(move) => {
+     let cell = board |> at(coord);
+     switch cell {
+     | Occupied(Black, Pawn) => []
+     | Occupied(White, Pawn) => []
+     | _ => []
+     };
+   }; */
