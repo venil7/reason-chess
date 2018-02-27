@@ -2,6 +2,8 @@ open Jest;
 
 open Game;
 
+open Board;
+
 open Coord;
 
 open Expect;
@@ -34,4 +36,9 @@ describe("Coord", () => {
   test("convert to index", () =>
     expect(indexOfCoord(Coord(4, 4))) |> toEqual(36)
   );
+  test("at", () => {
+    let board = empty() |> default;
+    let cell = board |> at(Coord(0, 0));
+    expect(cell) |> toEqual(Occupied(Black, Rook));
+  });
 });

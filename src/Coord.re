@@ -35,3 +35,8 @@ let next = (direction: direction, coord: coord) : coord =>
   | (West, Coord(x, y)) => Coord(x - 1, y)
   | (NorthWest, Coord(x, y)) => Coord(x - 1, y - 1)
   };
+
+let at = (coord: coord, board: board) : cell => {
+  let index = indexOfCoord(coord);
+  List.nth(board.cells, index);
+};

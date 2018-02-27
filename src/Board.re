@@ -2,14 +2,19 @@ open Game;
 
 open Coord;
 
+module PawnPiece = Piece.Make(Pawn);
+
 exception InvalidMove(string);
 
 let side = 8;
 
-let empty = () : board => Array.make(side * side, Empty) |> Array.to_list;
+let empty = () : board => {
+  let cells = Array.make(side * side, Empty) |> Array.to_list;
+  {blackCastling: false, whiteCastling:false, cells};
+};
 
-let default = (board: board) : board =>
-  board
+let default = (board: board) : board => {
+  let cells = board.cells
   |> List.mapi((idx, _) =>
        switch (idx, false) {
        | (0 | 7, _) => Occupied(Black, Rook)
@@ -27,16 +32,13 @@ let default = (board: board) : board =>
        | _ => Empty
        }
      );
-
-let at = (coord: coord, board: board) : cell => {
-  let index = indexOfCoord(coord);
-  List.nth(board, index);
+  {...board, cells};
 };
 
 let makeMove = ({prev, next}: move, board: board) => {
   let prevIndex = indexOfCoord(prev);
   let nextIndex = indexOfCoord(next);
-  board
+  let cells = board.cells
   |> List.mapi((index, cell) =>
        switch index {
        | idx when idx == prevIndex && cell != Empty => Empty
@@ -46,12 +48,13 @@ let makeMove = ({prev, next}: move, board: board) => {
        | _ => cell
        }
      );
+  {...board, cells};
 };
-/* let possibleMoves = (coord: coord, board: board) : list(move) => {
-     let cell = board |> at(coord);
-     switch cell {
-     | Occupied(Black, Pawn) => []
-     | Occupied(White, Pawn) => []
-     | _ => []
-     };
-   }; */
+
+let possibleMoves = (coord: coord, board: board) : list(move) => {
+  let cell = board |> at(coord);
+  switch cell {
+  | Occupied(player, Pawn) => PawnPiece.possibleMoves(coord, board, player)
+  | _ => []
+  };
+};

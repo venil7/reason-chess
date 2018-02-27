@@ -14,7 +14,11 @@ type cell =
   | Empty
   | Occupied(player, piece);
 
-type board = list(cell);
+type board = {
+  cells: list(cell),
+  blackCastling: bool,
+  whiteCastling: bool
+};
 
 type coord =
   | Coord(int, int);

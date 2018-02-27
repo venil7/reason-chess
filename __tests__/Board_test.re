@@ -4,24 +4,21 @@ open Game;
 
 open Board;
 
+open Coord;
+
 open Expect;
 
 describe("Board", () => {
   test("length", () =>
-    expect(List.length(empty())) |> toEqual(64)
+    expect(List.length(empty().cells)) |> toEqual(64)
   );
   test("empty", () =>
-    expect(List.for_all(c => c == Empty, empty())) |> toBe(true)
+    expect(List.for_all(c => c == Empty, empty().cells)) |> toBe(true)
   );
   test("default", () => {
     let board = empty() |> default;
-    expect(board |> List.filter(cell => cell != Empty) |> List.length)
+    expect(board.cells |> List.filter(cell => cell != Empty) |> List.length)
     |> toBe(32);
-  });
-  test("at", () => {
-    let board = empty() |> default;
-    let cell = board |> at(Coord(0, 0));
-    expect(cell) |> toEqual(Occupied(Black, Rook));
   });
   test("makeMove", () => {
     let board = empty() |> default;
