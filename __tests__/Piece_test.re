@@ -28,4 +28,10 @@ describe("Piece", () => {
     let cell = board |> at(Coord(0, 4));
     expect(cell |> enemyOf(White)) |> toBe(false);
   });
+  test("opposite White -> Black", () =>
+    expect(opposite(White)) |> toBe(Black)
+  );
+  test("opposite Black -> White", () =>
+    expect(opposite(Black)) |> toBe(White)
+  );
 });
