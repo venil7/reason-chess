@@ -46,7 +46,19 @@ let allTheWay =
       steps;
     };
   };
-  allTheWay'(board, player, direction, coord, []) |> List.rev;
+  allTheWay'(board, player, direction, coord, []);
+};
+
+let allTheWays =
+    (
+      board: Game.board,
+      player: Game.player,
+      directions: list(Game.direction),
+      coord: Game.coord
+    )
+    : list(Game.coord) => {
+  let atw = allTheWay(board, player);
+  directions |> List.fold_left((acc, dir) => acc @ atw(dir, coord), []);
 };
 
 module type PieceParam = {
