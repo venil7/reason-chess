@@ -25,13 +25,13 @@ describe("Index", () => {
 
 describe("Coord", () => {
   test("under index", () =>
-    expect(validCoord(Coord(-5, -7))) |> toBe(false)
+    expect(isValid(Coord(-5, -7))) |> toBe(false)
   );
   test("over index", () =>
-    expect(validCoord(Coord(8, 8))) |> toBe(false)
+    expect(isValid(Coord(8, 8))) |> toBe(false)
   );
   test("valid", () =>
-    expect(validCoord(Coord(4, 4))) |> toBe(true)
+    expect(isValid(Coord(4, 4))) |> toBe(true)
   );
   test("convert to index", () =>
     expect(indexOfCoord(Coord(4, 4))) |> toEqual(36)

@@ -34,4 +34,30 @@ describe("Piece", () => {
   test("opposite Black -> White", () =>
     expect(opposite(Black)) |> toBe(White)
   );
+  describe("All the way", () => {
+    test("North", () => {
+      let path = Coord(0, 6) |> Piece.allTheWay(board, White, North);
+      expect(path)
+      |> toEqual([
+           Coord(0, 5),
+           Coord(0, 4),
+           Coord(0, 3),
+           Coord(0, 2),
+           Coord(0, 1)
+         ]);
+    });
+    test("NorthWest", () => {
+      let path = Coord(6, 2) |> Piece.allTheWay(board, Black, SouthWest);
+      expect(path)
+      |> toEqual([Coord(5, 3), Coord(4, 4), Coord(3, 5), Coord(2, 6)]);
+    });
+    test("cornercase", () => {
+      let path = Coord(0, 0) |> Piece.allTheWay(board, Black, NorthWest);
+      expect(path) |> toEqual([]);
+    });
+    test("friendly fire", () => {
+      let path = Coord(7, 2) |> Piece.allTheWay(board, White, South);
+      expect(path) |> toEqual([Coord(7, 3), Coord(7, 4), Coord(7, 5)]);
+    });
+  });
 });

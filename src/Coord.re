@@ -6,7 +6,7 @@ exception InvalidCoord(coord);
 
 let validIndex = (index: int) => index >= 0 && index <= 63;
 
-let validCoord = (coord: coord) : bool =>
+let isValid = (coord: coord) : bool =>
   switch coord {
   | Coord(col, row) when (col >= 0 && col <= 7) && row >= 0 && row <= 7 => true
   | _ => false
@@ -20,7 +20,7 @@ let coordOfIndex = (index: int) : coord =>
 
 let indexOfCoord = (coord: coord) : int =>
   switch coord {
-  | Coord(col, row) when validCoord(coord) => row * 8 + col
+  | Coord(col, row) when isValid(coord) => row * 8 + col
   | _ => raise(InvalidCoord(coord))
   };
 

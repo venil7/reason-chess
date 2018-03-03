@@ -14,9 +14,6 @@ let weight = (coord: coord, player: player) : float =>
     pieceWeight -. (7.0 -. float_of_int(y)) *. coefficient
   };
 
-let isStrikable = (board: board, player: player, coord: coord) : bool =>
-  validCoord(coord) && Piece.enemyOf(player, board |> at(coord));
-
 let possibleSouthMoves =
     (coord: coord, board: board, player: player)
     : list(coord) => {
@@ -28,7 +25,7 @@ let possibleSouthMoves =
     };
   let strikes =
     [forward, coord |> next(SouthEast), coord |> next(SouthWest)]
-    |> List.filter(isStrikable(board, player));
+    |> List.filter(Piece.isStrikable(board, player));
   strikes @ coords;
 };
 
@@ -43,7 +40,7 @@ let possibleNorthMoves =
     };
   let strikes =
     [forward, coord |> next(NorthEast), coord |> next(NorthWest)]
-    |> List.filter(isStrikable(board, player));
+    |> List.filter(Piece.isStrikable(board, player));
   strikes @ coords;
 };
 
@@ -53,5 +50,5 @@ let possibleMoves = (coord: coord, board: board, player: player) : list(coord) =
     | Black => possibleSouthMoves(coord, board, Black)
     | White => possibleNorthMoves(coord, board, White)
     };
-  moves |> List.filter(validCoord);
+  moves |> List.filter(isValid);
 };

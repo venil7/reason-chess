@@ -1,13 +1,52 @@
-let opposite = (player: Game.player): Game.player => switch player {
-| White => Black
-| Black => White
-};
+open Coord;
 
-let enemyOf = (player:Game.player, cell: Game.cell): bool => {
-  switch cell {
-  | Game.Occupied(p, _) => opposite(p) == player;
-  | _ => false;
+let opposite = (player: Game.player) : Game.player =>
+  switch player {
+  | White => Black
+  | Black => White
   };
+
+let enemyOf = (player: Game.player, cell: Game.cell) : bool =>
+  switch cell {
+  | Game.Occupied(p, _) => opposite(p) == player
+  | _ => false
+  };
+
+let isStrikable =
+    (board: Game.board, player: Game.player, coord: Game.coord)
+    : bool =>
+  isValid(coord) && enemyOf(player, board |> at(coord));
+
+let allTheWay =
+    (
+      board: Game.board,
+      player: Game.player,
+      direction: Game.direction,
+      coord: Game.coord
+    )
+    : list(Game.coord) => {
+  let rec allTheWay' =
+          (
+            board: Game.board,
+            player: Game.player,
+            direction: Game.direction,
+            coord: Game.coord,
+            steps: list(Game.coord)
+          )
+          : list(Game.coord) => {
+    let step = coord |> next(direction);
+    if (isValid(step)) {
+      switch (board |> at(step)) {
+      | Game.Occupied(plyr, _) when plyr == player => steps
+      | Game.Occupied(_, _) => [step, ...steps]
+      | Game.Empty =>
+        allTheWay'(board, player, direction, step, [step, ...steps])
+      };
+    } else {
+      steps;
+    };
+  };
+  allTheWay'(board, player, direction, coord, []) |> List.rev;
 };
 
 module type PieceParam = {
@@ -26,6 +65,6 @@ module Make = (PP: PieceParam) : PieceImpl => {
       (coord: Game.coord, board: Game.board, player: Game.player)
       : list(Game.move) => {
     let coords = PP.possibleMoves(coord, board, player);
-    coords |> List.map(next => ({prev: coord, next}:Game.move));
+    coords |> List.map(next => ({prev: coord, next}: Game.move));
   };
 };
