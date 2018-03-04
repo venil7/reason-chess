@@ -72,8 +72,7 @@ describe("Pawn", () => {
       let coord = Coord(3, 6);
       let board = empty() |> setAt(Pawn, White, coord); /*piece under test*/
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
-      expect(coords)
-      |> toEqual([|coord |> next(North), coord |> next(North) |> next(North)|]);
+      expect(coords) |> toEqual([|Coord(3, 5), Coord(3, 4)|]);
     });
     test("possible moves (2 attack), frontline", () => {
       let coord = Coord(3, 6);

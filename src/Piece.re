@@ -6,16 +6,16 @@ let opposite = (player: Game.player) : Game.player =>
   | Black => White
   };
 
-let enemyOf = (player: Game.player, cell: Game.cell) : bool =>
-  switch cell {
-  | Game.Occupied(p, _) => opposite(p) == player
-  | _ => false
-  };
-
-let isStrikable =
+let isWalkable =
     (board: Game.board, player: Game.player, coord: Game.coord)
     : bool =>
-  isValid(coord) && enemyOf(player, board |> at(coord));
+  isValid(coord)
+  && (
+    switch (board |> at(coord)) {
+    | Empty => true
+    | Occupied(p, _) => p != player
+    }
+  );
 
 let allTheWay =
     (
