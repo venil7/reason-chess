@@ -45,4 +45,26 @@ describe("Eval", () => {
       expect(weight'(King)) |> toBe(10.0)
     );
   });
+  describe("Eval board", () => {
+    open Board;
+    let board = empty() |> default;
+    test("default White", () =>
+      expect(eval(board, White)) |> toBe(0.0)
+    );
+    test("default Black", () =>
+      expect(eval(board, Black)) |> toBe(0.0)
+    );
+    test("White advantage", () => {
+      let board' =
+        board |> Board.makeMove({prev: Coord(1, 6), next: Coord(1, 4)});
+      expect(eval(board', White)) |> toBeCloseTo(0.2);
+    });
+    test("Black advantage", () => {
+      let board' =
+        board
+        |> Board.makeMove({prev: Coord(1, 6), next: Coord(1, 5)})
+        |> Board.makeMove({prev: Coord(5, 1), next: Coord(5, 3)});
+      expect(eval(board', Black)) |> toBeCloseTo(0.1);
+    });
+  });
 });

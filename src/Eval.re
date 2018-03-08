@@ -1,5 +1,7 @@
 open Game;
 
+open Coord;
+
 let pawnWeight = (player: player, coord: coord) : float => {
   let pieceWeight = 1.0;
   let coefficient = 0.1;
@@ -21,3 +23,18 @@ let weight = (player: player, coord: coord, piece: piece) : float =>
   | Queen => 5.0
   | King => 10.0
   };
+
+let eval = (board: board, player: player) : float =>
+  board.cells
+  |> List.mapi((index, cell: cell) => (index, cell))
+  |> List.fold_left(
+       (acc, (index, cell)) =>
+         switch (cell) {
+         | Occupied(player', piece) when player' == player =>
+           acc +. weight(player, coordOfIndex(index), piece)
+         | Occupied(player', piece) when player' != player =>
+           acc -. weight(player', coordOfIndex(index), piece)
+         | _ => acc
+         },
+       0.0,
+     );
