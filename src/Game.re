@@ -39,3 +39,6 @@ type move = {
   prev: coord,
   next: coord
 };
+
+type eval =
+  | Eval(move, float);

@@ -1,7 +1,7 @@
 open Coord;
 
 let opposite = (player: Game.player) : Game.player =>
-  switch player {
+  switch (player) {
   | White => Black
   | Black => White
   };
@@ -22,7 +22,7 @@ let allTheWay =
       board: Game.board,
       player: Game.player,
       direction: Game.direction,
-      coord: Game.coord
+      coord: Game.coord,
     )
     : list(Game.coord) => {
   let rec allTheWay' =
@@ -31,7 +31,7 @@ let allTheWay =
             player: Game.player,
             direction: Game.direction,
             coord: Game.coord,
-            steps: list(Game.coord)
+            steps: list(Game.coord),
           )
           : list(Game.coord) => {
     let step = coord |> next(direction);
@@ -54,7 +54,7 @@ let allTheWays =
       board: Game.board,
       player: Game.player,
       directions: list(Game.direction),
-      coord: Game.coord
+      coord: Game.coord,
     )
     : list(Game.coord) => {
   let atw = allTheWay(board, player);
@@ -62,17 +62,15 @@ let allTheWays =
 };
 
 module type PieceParam = {
-  let weight: (Game.coord, Game.player) => float;
-  let possibleMoves: (Game.coord, Game.board, Game.player) => list(Game.coord);
+  let possibleMoves:
+    (Game.coord, Game.board, Game.player) => list(Game.coord);
 };
 
 module type PieceImpl = {
-  let weight: (Game.coord, Game.player) => float;
   let possibleMoves: (Game.coord, Game.board, Game.player) => list(Game.move);
 };
 
 module Make = (PP: PieceParam) : PieceImpl => {
-  let weight = PP.weight;
   let possibleMoves =
       (coord: Game.coord, board: Game.board, player: Game.player)
       : list(Game.move) => {
