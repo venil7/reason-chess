@@ -1,11 +1,5 @@
 open Coord;
 
-let opposite = (player: Game.player) : Game.player =>
-  switch (player) {
-  | White => Black
-  | Black => White
-  };
-
 let isWalkable =
     (board: Game.board, player: Game.player, coord: Game.coord)
     : bool =>

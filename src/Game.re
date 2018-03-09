@@ -17,7 +17,9 @@ type cell =
 type board = {
   cells: list(cell),
   blackCastling: bool,
-  whiteCastling: bool
+  whiteCastling: bool,
+  underCheck: option(player),
+  capturedPieces: list((player, piece)),
 };
 
 type coord =
@@ -37,8 +39,10 @@ type direction =
 
 type move = {
   prev: coord,
-  next: coord
+  next: coord,
 };
 
+type score = float;
+
 type eval =
-  | Eval(move, float);
+  | Eval(move, score);

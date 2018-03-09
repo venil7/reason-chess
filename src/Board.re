@@ -18,14 +18,23 @@ exception InvalidMove(string);
 
 let side = 8;
 
+let iterate = (board: board) : list(cell) => board.cells;
+
 let empty = () : board => {
   let cells = Array.make(side * side, Empty) |> Array.to_list;
-  {blackCastling: false, whiteCastling: false, cells};
+  {
+    blackCastling: false,
+    whiteCastling: false,
+    underCheck: None,
+    capturedPieces: [],
+    cells,
+  };
 };
 
 let default = (board: board) : board => {
   let cells =
-    board.cells
+    board
+    |> iterate
     |> List.mapi((idx, _) =>
          switch (idx, false) {
          | (0 | 7, _) => Occupied(Black, Rook)
@@ -51,7 +60,8 @@ let makeMove = ({prev, next}: move, board: board) => {
   let prevIndex = indexOfCoord(prev);
   let nextIndex = indexOfCoord(next);
   let cells =
-    board.cells
+    board
+    |> iterate
     |> List.mapi((index, cell) =>
          switch (index) {
          | idx when idx == prevIndex && cell != Empty => Empty
@@ -67,7 +77,8 @@ let makeMove = ({prev, next}: move, board: board) => {
 let setAt = (piece: piece, player: player, coord: coord, board: board) : board => {
   let setIndex = indexOfCoord(coord);
   let cells =
-    board.cells
+    board
+    |> iterate
     |> List.mapi((index, cell) =>
          switch (index) {
          | idx when idx == setIndex => Occupied(player, piece)
@@ -91,3 +102,16 @@ let possibleMoves = (coord: coord, board: board) : list(move) => {
   | _ => []
   };
 };
+
+let winner = (board: board) : option(player) =>
+  board
+  |> iterate
+  |> List.fold_left(
+       (acc, cell) =>
+         switch (acc, cell) {
+         | (None, Occupied(player, King)) => Some(player)
+         | (Some(_), Occupied(_, King)) => None
+         | _ => acc
+         },
+       None,
+     );

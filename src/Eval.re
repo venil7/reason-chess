@@ -2,7 +2,7 @@ open Game;
 
 open Coord;
 
-let pawnWeight = (player: player, coord: coord) : float => {
+let pawnWeight = (player: player, coord: coord) : score => {
   let pieceWeight = 1.0;
   let coefficient = 0.1;
   switch (coord, player) {
@@ -14,7 +14,7 @@ let pawnWeight = (player: player, coord: coord) : float => {
   };
 };
 
-let weight = (player: player, coord: coord, piece: piece) : float =>
+let weight = (player: player, coord: coord, piece: piece) : score =>
   switch (piece) {
   | Pawn => pawnWeight(player, coord)
   | Rook
@@ -24,7 +24,7 @@ let weight = (player: player, coord: coord, piece: piece) : float =>
   | King => 10.0
   };
 
-let eval = (board: board, player: player) : float =>
+let eval = (board: board, player: player) : score =>
   board.cells
   |> List.mapi((index, cell: cell) => (index, cell))
   |> List.fold_left(
