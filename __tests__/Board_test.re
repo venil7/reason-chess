@@ -43,4 +43,32 @@ describe("Board", () => {
       expect(winner(board')) |> toEqual(Some(Black));
     });
   });
+  describe("Possible moves", () =>
+    test("White", () => {
+      let moves = () |> empty |> default |> possibleMoves(White);
+      expect(moves |> Array.of_list)
+      |> toBeSupersetOf([|
+           {prev: Coord(0, 6), next: Coord(0, 4)},
+           {prev: Coord(0, 6), next: Coord(0, 5)},
+           {prev: Coord(1, 6), next: Coord(1, 4)},
+           {prev: Coord(1, 6), next: Coord(1, 5)},
+           {prev: Coord(2, 6), next: Coord(2, 4)},
+           {prev: Coord(2, 6), next: Coord(2, 5)},
+           {prev: Coord(3, 6), next: Coord(3, 4)},
+           {prev: Coord(3, 6), next: Coord(3, 5)},
+           {prev: Coord(4, 6), next: Coord(4, 4)},
+           {prev: Coord(4, 6), next: Coord(4, 5)},
+           {prev: Coord(5, 6), next: Coord(5, 4)},
+           {prev: Coord(5, 6), next: Coord(5, 5)},
+           {prev: Coord(6, 6), next: Coord(6, 4)},
+           {prev: Coord(6, 6), next: Coord(6, 5)},
+           {prev: Coord(7, 6), next: Coord(7, 4)},
+           {prev: Coord(7, 6), next: Coord(7, 5)},
+           {prev: Coord(1, 7), next: Coord(0, 5)},
+           {prev: Coord(1, 7), next: Coord(2, 5)},
+           {prev: Coord(6, 7), next: Coord(5, 5)},
+           {prev: Coord(6, 7), next: Coord(7, 5)},
+         |]);
+    })
+  );
 });

@@ -24,17 +24,26 @@ let weight = (player: player, coord: coord, piece: piece) : score =>
   | King => 10.0
   };
 
-let eval = (board: board, player: player) : score =>
-  board.cells
-  |> List.mapi((index, cell: cell) => (index, cell))
-  |> List.fold_left(
-       (acc, (index, cell)) =>
-         switch (cell) {
-         | Occupied(player', piece) when player' == player =>
-           acc +. weight(player, coordOfIndex(index), piece)
-         | Occupied(player', piece) when player' != player =>
-           acc -. weight(player', coordOfIndex(index), piece)
-         | _ => acc
-         },
-       0.0,
-     );
+let minimizer = (Eval(_, score1), Eval(_, score2)) : int =>
+  score1 > score2 ? 1 : score1 < score2 ? (-1) : 0;
+
+let maximizer = (Eval(_, score1), Eval(_, score2)) : int =>
+  score2 > score1 ? 1 : score2 < score1 ? (-1) : 0;
+
+let score = (board: board, player: player, depth: int) : score => {
+  let score' =
+    board.cells
+    |> List.mapi((index, cell: cell) => (index, cell))
+    |> List.fold_left(
+         (acc, (index, cell)) =>
+           switch (cell) {
+           | Occupied(player', piece) when player' == player =>
+             acc +. weight(player, coordOfIndex(index), piece)
+           | Occupied(player', piece) when player' != player =>
+             acc -. weight(player', coordOfIndex(index), piece)
+           | _ => acc
+           },
+         0.0,
+       );
+  score' -. float_of_int(depth);
+};

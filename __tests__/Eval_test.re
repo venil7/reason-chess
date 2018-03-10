@@ -49,22 +49,42 @@ describe("Eval", () => {
     open Board;
     let board = empty() |> default;
     test("default White", () =>
-      expect(eval(board, White)) |> toBe(0.0)
+      expect(score(board, White, 0)) |> toBe(0.0)
     );
     test("default Black", () =>
-      expect(eval(board, Black)) |> toBe(0.0)
+      expect(score(board, Black, 0)) |> toBe(0.0)
     );
     test("White advantage", () => {
       let board' =
         board |> Board.makeMove({prev: Coord(1, 6), next: Coord(1, 4)});
-      expect(eval(board', White)) |> toBeCloseTo(0.2);
+      expect(score(board', White, 0)) |> toBeCloseTo(0.2);
     });
     test("Black advantage", () => {
       let board' =
         board
         |> Board.makeMove({prev: Coord(1, 6), next: Coord(1, 5)})
         |> Board.makeMove({prev: Coord(5, 1), next: Coord(5, 3)});
-      expect(eval(board', Black)) |> toBeCloseTo(0.1);
+      expect(score(board', Black, 0)) |> toBeCloseTo(0.1);
     });
+    test("depth disadvantage", () =>
+      expect(score(board, White, 1)) |> toBeCloseTo(-1.0)
+    );
+  });
+  describe("Eval sort", () => {
+    let move = {prev: Coord(1, 2), next: Coord(3, 4)};
+    let map = (Eval(_, score)) => score;
+    let evals: list(eval) = [
+      Eval(move, 1.2),
+      Eval(move, 0.9),
+      Eval(move, -3.4),
+    ];
+    test("sorting for minimizer", () =>
+      expect(evals |> List.sort(minimizer) |> List.map(map))
+      |> toEqual([(-3.4), 0.9, 1.2])
+    );
+    test("sorting for maximizer", () =>
+      expect(evals |> List.sort(maximizer) |> List.map(map))
+      |> toEqual([1.2, 0.9, (-3.4)])
+    );
   });
 });

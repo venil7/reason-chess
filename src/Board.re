@@ -88,20 +88,28 @@ let setAt = (piece: piece, player: player, coord: coord, board: board) : board =
   {...board, cells};
 };
 
-let possibleMoves = (coord: coord, board: board) : list(move) => {
-  let cell = board |> at(coord);
-  switch (cell) {
-  | Occupied(player, Pawn) => PawnPiece.possibleMoves(coord, board, player)
-  | Occupied(player, Rook) => RookPiece.possibleMoves(coord, board, player)
-  | Occupied(player, Knight) =>
-    KnightPiece.possibleMoves(coord, board, player)
-  | Occupied(player, Bishop) =>
-    BishopPiece.possibleMoves(coord, board, player)
-  | Occupied(player, Queen) => QueenPiece.possibleMoves(coord, board, player)
-  | Occupied(player, King) => KingPiece.possibleMoves(coord, board, player)
-  | _ => []
+let possiblePieceMoves = (coord: coord, piece:piece, player:player, board: board) : list(move) => {
+  switch (piece) {
+  | Pawn => PawnPiece.possibleMoves(coord, board, player)
+  | Rook => RookPiece.possibleMoves(coord, board, player)
+  | Knight => KnightPiece.possibleMoves(coord, board, player)
+  | Bishop => BishopPiece.possibleMoves(coord, board, player)
+  | Queen => QueenPiece.possibleMoves(coord, board, player)
+  | King => KingPiece.possibleMoves(coord, board, player)
   };
 };
+
+let possibleMoves = (player: player, board: board) : list(move) =>
+  board
+  |> iterate
+  |> List.mapi((index, cell) =>
+       switch (cell) {
+       | Occupied(player', piece) when player == player' =>
+         board |> possiblePieceMoves(coordOfIndex(index), piece, player)
+       | _ => []
+       }
+     )
+  |> List.concat;
 
 let winner = (board: board) : option(player) =>
   board

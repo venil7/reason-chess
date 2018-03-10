@@ -25,8 +25,6 @@ type board = {
 type coord =
   | Coord(int, int);
 
-type path = list(coord);
-
 type direction =
   | North
   | NorthEast
