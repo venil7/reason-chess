@@ -4,11 +4,13 @@
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -clean-world && bsb -make-world -w",
-    "test": "npm run build && jest"
+    "test": "npm run build && jest",
+    "clean": "bsb -clean-world"
   },
   "keywords": [
-    "BuckleScript"
+    "chess"
   ],
+  "main": "src/Index.bs.js",
   "author": "",
   "license": "MIT",
   "devDependencies": {

@@ -5,3 +5,4 @@ npm-debug.log
 *.bs.js
 /lib/bs/
 /node_modules/
+/example/node_modules/
