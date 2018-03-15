@@ -1,6 +1,6 @@
 {
   "name": "reason-chess",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -clean-world && bsb -make-world -w",
@@ -11,7 +11,7 @@
     "chess"
   ],
   "main": "src/Index.bs.js",
-  "author": "",
+  "author": "Art Deineka",
   "license": "MIT",
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.2",

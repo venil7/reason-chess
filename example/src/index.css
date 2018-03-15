@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.cell {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  /* border: 1px solid grey; */
+}
+.cell:after {
+  content: "  ";
+}
+
+.cell.black.knight:after {
+  content: "♞";
+}
+.cell.black.rook:after {
+  content: "♜";
+}
+.cell.black.bishop:after {
+  content: "♝";
+}
+.cell.black.pawn:after {
+  content: "♟";
+}
+.cell.black.king:after {
+  content: "♚";
+}
+.cell.black.queen:after {
+  content: "♛";
+}
+
+.cell.white.knight:after {
+  content: "♘";
+}
+.cell.white.rook:after {
+  content: "♖";
+}
+.cell.white.bishop:after {
+  content: "♗";
+}
+.cell.white.pawn:after {
+  content: "♙";
+}
+.cell.white.king:after {
+  content: "♔";
+}
+.cell.white.queen:after {
+  content: "♕";
+}
+
+.cell.selected {
+  background: linear-gradient(rgba(0,0,255,.2),rgba(0,0,0,.2));
+}
+.cell.path {
+  background: linear-gradient(rgba(0,255,0,.2),rgba(0,0,0,.2));
+}
+.cell.attack {
+  background: linear-gradient(rgba(255,0,0,.2),rgba(0,0,0,.2));
+}
+
+.board {
+  display: block;
+  width: 264px;
+  height: 264px;
+}
+
+.board .cell:nth-child(-2n+8),
+.board .cell:nth-child(8) ~ .cell:nth-child(-2n+15),
+.board .cell:nth-child(16) ~ .cell:nth-child(-2n+24),
+.board .cell:nth-child(24) ~ .cell:nth-child(-2n+31),
+.board .cell:nth-child(32) ~ .cell:nth-child(-2n+40),
+.board .cell:nth-child(40) ~ .cell:nth-child(-2n+47),
+.board .cell:nth-child(48) ~ .cell:nth-child(-2n+56),
+.board .cell:nth-child(56) ~ .cell:nth-child(-2n+63) {
+    background-color: #eee;
+}
