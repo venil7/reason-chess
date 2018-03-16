@@ -7,22 +7,50 @@ open ReasonChess.Coord;
 type moveCallback = move => unit;
 
 type state = {
-  possibleMoves: list(move),
+  possibleCoords: list(coord),
   selected: option(coord),
 };
 
-let initialState = () : state => {possibleMoves: [], selected: None};
+let moveToCoord = ({next, _}: move) : coord => next;
+
+let initialState = () : state => {possibleCoords: [], selected: None};
 
 let moveComplete = (onMove: moveCallback, move: move, _self) => onMove(move);
 
-type action =
-  | Select(coord);
+let highlight = (state: state, index: int) : Cell.highlight => {
+  let coord = coordOfIndex(index);
+  switch (state.selected) {
+  | Some(coord') when coord' == coord => Selected
+  | _ when List.mem(coord, state.possibleCoords) => Path
+  | _ => None
+  };
+};
 
-let reducer' = (onMove: moveCallback, action: action, state: state) =>
+type action =
+  | Select(coord, cell);
+
+let reducer' =
+    (
+      board: board,
+      onMove: moveCallback,
+      player1: player,
+      action: action,
+      state: state,
+    ) =>
+  /* making a move requires two click - from and to */
   switch (action, state.selected) {
-  | (Select(coord), None) =>
-    ReasonReact.Update({...state, selected: Some(coord)})
-  | (Select(prev), Some(next)) =>
+  /* click 1 */
+  | (Select(coord, cell), None) =>
+    let possibleCoords =
+      switch (cell) {
+      | Occupied(player, piece) when player == player1 =>
+        possiblePieceMoves(coord, piece, player, board)
+        |> List.map(moveToCoord)
+      | _ => []
+      };
+    ReasonReact.Update({possibleCoords, selected: Some(coord)});
+  /* click 2 */
+  | (Select(next, _), Some(prev)) =>
     ReasonReact.UpdateWithSideEffects(
       initialState(),
       moveComplete(onMove, {prev, next}),
@@ -31,10 +59,10 @@ let reducer' = (onMove: moveCallback, action: action, state: state) =>
 
 let component = ReasonReact.reducerComponent("Board");
 
-let make = (~board: board, ~onMove: moveCallback, _children) => {
+let make = (~board: board, ~player1: player, ~onMove: moveCallback, _children) => {
   ...component,
   initialState,
-  reducer: reducer'(onMove),
+  reducer: reducer'(board, onMove, player1),
   render: self =>
     <div className="board">
       (
@@ -43,10 +71,10 @@ let make = (~board: board, ~onMove: moveCallback, _children) => {
         |> List.mapi((index, cell) =>
              <Cell
                cell
-               highlight=None
+               highlight=(index |> highlight(self.state))
                key=(string_of_int(index))
                coord=(coordOfIndex(index))
-               onClick=(coord => self.send(Select(coord)))
+               onClick=(coord => self.send(Select(coord, cell)))
              />
            )
         |> Array.of_list
