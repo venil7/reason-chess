@@ -37,24 +37,34 @@ let reducer' =
       action: action,
       state: state,
     ) =>
-  /* making a move requires two click - from and to */
+  /* making a move requires two clicks - from and to */
   switch (action, state.selected) {
-  /* click 1 */
+  /* click 1 from*/
   | (Select(coord, cell), None) =>
-    let possibleCoords =
+    let state' =
       switch (cell) {
       | Occupied(player, piece) when player == player1 =>
-        possiblePieceMoves(coord, piece, player, board)
-        |> List.map(moveToCoord)
-      | _ => []
+        let possibleCoords =
+          possiblePieceMoves(coord, piece, player, board)
+          |> List.map(moveToCoord);
+        {possibleCoords, selected: Some(coord)};
+      | _ => initialState()
       };
-    ReasonReact.Update({possibleCoords, selected: Some(coord)});
-  /* click 2 */
+    ReasonReact.Update(state');
+  /* click 2 to*/
   | (Select(next, _), Some(prev)) =>
-    ReasonReact.UpdateWithSideEffects(
-      initialState(),
-      moveComplete(onMove, {prev, next}),
-    )
+    let validMove = List.mem(next, state.possibleCoords);
+    if (validMove) {
+      ReasonReact.UpdateWithSideEffects(
+        initialState(),
+        moveComplete(onMove, {prev, next}),
+      );
+    } else {
+      ReasonReact.UpdateWithSideEffects(
+        initialState(),
+        (self => self.send(action)),
+      );
+    };
   };
 
 let component = ReasonReact.reducerComponent("Board");
