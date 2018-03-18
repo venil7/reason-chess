@@ -2,15 +2,38 @@ open ReasonChess.Game;
 
 open ReasonChess.Board;
 
-let player1 = White;
+type state = {
+  player,
+  board,
+};
 
-let component = ReasonReact.statelessComponent("App");
+type action =
+  | Move(move)
+  | Board(board);
 
-let board = empty() |> default;
+let initialState = () : state => {player: White, board: empty() |> default};
 
-let onMove = (move: move) => Js.log(move);
+let reducer = (action: action, state: state) =>
+  switch (action) {
+  | Move(move) =>
+    let board' = makeMove(move, state.board);
+    ReasonReact.UpdateWithSideEffects(
+      {...state, board: board'},
+      (self => self.send(Board(ReasonChess.Minimax.cpu(board', ())))),
+    );
+  | Board(board) => ReasonReact.Update({...state, board})
+  };
+
+let component = ReasonReact.reducerComponent("App");
 
 let make = _children => {
   ...component,
-  render: _self => <div className="App"> <Board board onMove player1 /> </div>,
+  initialState,
+  reducer,
+  render: self => {
+    let {board, player} = self.state;
+    <div className="App">
+      <Board board onMove=(move => self.send(Move(move))) player1=player />
+    </div>;
+  },
 };
