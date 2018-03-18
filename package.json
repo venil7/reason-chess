@@ -1,6 +1,11 @@
 {
   "name": "reason-chess",
-  "version": "1.0.1",
+  "version": "1.0.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/venil7/reason-chess.git"
+  },
+  "description": "chess engine for reasonml",
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -clean-world && bsb -make-world -w",
@@ -8,9 +13,10 @@
     "clean": "bsb -clean-world"
   },
   "keywords": [
-    "chess"
+    "chess",
+    "game",
+    "minimax"
   ],
-  "main": "src/Index.bs.js",
   "author": "Art Deineka",
   "license": "MIT",
   "devDependencies": {

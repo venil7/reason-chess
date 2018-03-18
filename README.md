@@ -1,4 +1,4 @@
-# reason-chess
+### `reason-chess` chess engine for reasonml
 
 # Build
 ```

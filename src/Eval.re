@@ -24,10 +24,10 @@ let weight = (player: player, coord: coord, piece: piece) : score =>
   | King => 10.0
   };
 
-let minimizer = (Eval(_, score1), Eval(_, score2)) : int =>
+let minimize = (Eval(_, score1), Eval(_, score2)) : int =>
   score1 > score2 ? 1 : score1 < score2 ? (-1) : 0;
 
-let maximizer = (Eval(_, score1), Eval(_, score2)) : int =>
+let maximize = (Eval(_, score1), Eval(_, score2)) : int =>
   score2 > score1 ? 1 : score2 < score1 ? (-1) : 0;
 
 let score = (board: board, player: player, depth: int) : score => {

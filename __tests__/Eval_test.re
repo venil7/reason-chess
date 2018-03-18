@@ -79,11 +79,11 @@ describe("Eval", () => {
       Eval(move, -3.4),
     ];
     test("sorting for minimizer", () =>
-      expect(evals |> List.sort(minimizer) |> List.map(map))
+      expect(evals |> List.sort(minimize) |> List.map(map))
       |> toEqual([(-3.4), 0.9, 1.2])
     );
     test("sorting for maximizer", () =>
-      expect(evals |> List.sort(maximizer) |> List.map(map))
+      expect(evals |> List.sort(maximize) |> List.map(map))
       |> toEqual([1.2, 0.9, (-3.4)])
     );
   });

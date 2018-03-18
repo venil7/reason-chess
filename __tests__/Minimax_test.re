@@ -1,5 +1,7 @@
 open Jest;
 
+open Game;
+
 open Board;
 
 open Minimax;
@@ -8,8 +10,13 @@ open Expect;
 
 describe("Eval", () => {
   let board = empty() |> default;
-  test("first move", () => {
-    let board' = cpu(board, ());
-    expect(board') |> toEqual(board');
+  let depth = 4;
+  test("first move (Black)", () => {
+    let Eval(move, _) = minimax(board, Black, depth, ());
+    expect(move) |> toEqual({prev: Coord(0, 1), next: Coord(0, 3)});
+  });
+  test("first move (White)", () => {
+    let Eval(move, _) = minimax(board, White, depth, ());
+    expect(move) |> toEqual({prev: Coord(0, 6), next: Coord(0, 4)});
   });
 });
