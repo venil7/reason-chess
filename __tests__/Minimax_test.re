@@ -17,6 +17,6 @@ describe("Eval", () => {
   });
   test("first move (White)", () => {
     let Eval(move, _) = minimax(board, White, depth, ());
-    expect(move) |> toEqual({prev: Coord(0, 6), next: Coord(0, 4)});
+    expect(move) |> toEqual({prev: Coord(7, 6), next: Coord(7, 4)});
   });
 });
