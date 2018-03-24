@@ -30,20 +30,17 @@ let minimize = (Eval(_, score1), Eval(_, score2)) : int =>
 let maximize = (Eval(_, score1), Eval(_, score2)) : int =>
   score2 > score1 ? 1 : score2 < score1 ? (-1) : 0;
 
-let score = (board: board, player: player, depth: int) : score => {
-  let score' =
-    board.cells
-    |> List.mapi((index, cell: cell) => (index, cell))
-    |> List.fold_left(
-         (acc, (index, cell)) =>
-           switch (cell) {
-           | Occupied(player', piece) when player' == player =>
-             acc +. weight(player, coordOfIndex(index), piece)
-           | Occupied(player', piece) when player' != player =>
-             acc -. weight(player', coordOfIndex(index), piece)
-           | _ => acc
-           },
-         0.0,
-       );
-  score' -. float_of_int(depth);
-};
+let score = (board: board, player: player) : score =>
+  board.cells
+  |> List.mapi((index, cell: cell) => (index, cell))
+  |> List.fold_left(
+       (acc, (index, cell)) =>
+         switch (cell) {
+         | Occupied(player', piece) when player' == player =>
+           acc +. weight(player, coordOfIndex(index), piece)
+         | Occupied(player', piece) when player' != player =>
+           acc -. weight(player', coordOfIndex(index), piece)
+         | _ => acc
+         },
+       0.0,
+     );

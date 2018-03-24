@@ -16,10 +16,9 @@ type cell =
 
 type board = {
   cells: list(cell),
-  blackCastling: bool,
-  whiteCastling: bool,
+  castling: (bool, bool),
   underCheck: option(player),
-  capturedPieces: list((player, piece)),
+  captured: list((player, piece)),
 };
 
 type coord =

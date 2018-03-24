@@ -22,13 +22,7 @@ let iterate = (board: board) : list(cell) => board.cells;
 
 let empty = () : board => {
   let cells = Array.make(side * side, Empty) |> Array.to_list;
-  {
-    blackCastling: false,
-    whiteCastling: false,
-    underCheck: None,
-    capturedPieces: [],
-    cells,
-  };
+  {castling: (false, false), underCheck: None, captured: [], cells};
 };
 
 let default = (board: board) : board => {
@@ -88,7 +82,9 @@ let setAt = (piece: piece, player: player, coord: coord, board: board) : board =
   {...board, cells};
 };
 
-let possiblePieceMoves = (coord: coord, piece:piece, player:player, board: board) : list(move) => {
+let possiblePieceMoves =
+    (coord: coord, piece: piece, player: player, board: board)
+    : list(move) =>
   switch (piece) {
   | Pawn => PawnPiece.possibleMoves(coord, board, player)
   | Rook => RookPiece.possibleMoves(coord, board, player)
@@ -97,7 +93,6 @@ let possiblePieceMoves = (coord: coord, piece:piece, player:player, board: board
   | Queen => QueenPiece.possibleMoves(coord, board, player)
   | King => KingPiece.possibleMoves(coord, board, player)
   };
-};
 
 let possibleMoves = (player: player, board: board) : list(move) =>
   board

@@ -58,8 +58,7 @@ let rec minimax =
   | (Some(player), Some(move), _) when player == maximizer =>
     Eval(move, depth' -. maxScore)
   /* when depth level has been reached */
-  | (_, Some(move), depth) when depth <= 0 =>
-    Eval(move, score(board, player, depth))
+  | (_, Some(move), 0) => Eval(move, score(board, player))
   /* when depth level hasn't been reached yet */
   | (_, _, depth) =>
     let {alpha, beta} = alphaBeta;

@@ -49,26 +49,23 @@ describe("Eval", () => {
     open Board;
     let board = empty() |> default;
     test("default White", () =>
-      expect(score(board, White, 0)) |> toBe(0.0)
+      expect(score(board, White)) |> toBe(0.0)
     );
     test("default Black", () =>
-      expect(score(board, Black, 0)) |> toBe(0.0)
+      expect(score(board, Black)) |> toBe(0.0)
     );
     test("White advantage", () => {
       let board' =
         board |> Board.makeMove({prev: Coord(1, 6), next: Coord(1, 4)});
-      expect(score(board', White, 0)) |> toBeCloseTo(0.2);
+      expect(score(board', White)) |> toBeCloseTo(0.2);
     });
     test("Black advantage", () => {
       let board' =
         board
         |> Board.makeMove({prev: Coord(1, 6), next: Coord(1, 5)})
         |> Board.makeMove({prev: Coord(5, 1), next: Coord(5, 3)});
-      expect(score(board', Black, 0)) |> toBeCloseTo(0.1);
+      expect(score(board', Black)) |> toBeCloseTo(0.1);
     });
-    test("depth disadvantage", () =>
-      expect(score(board, White, 1)) |> toBeCloseTo(-1.0)
-    );
   });
   describe("Eval sort", () => {
     let move = {prev: Coord(1, 2), next: Coord(3, 4)};
