@@ -2,6 +2,12 @@ open Coord;
 
 open Game;
 
+let emptyCell = (board: board, coord: coord) : bool =>
+  switch (board |> at(coord)) {
+  | Occupied(_, _) => false
+  | _ => true
+  };
+
 let isStrikable =
     (board: Game.board, player: Game.player, coord: Game.coord)
     : bool =>
@@ -18,10 +24,13 @@ let possibleSouthMoves =
     : list(coord) => {
   let forward = coord |> next(South);
   let coords =
-    switch (coord) {
-    | Coord(_, 1) => [forward, forward |> next(South)]
-    | _ => [forward]
-    };
+    (
+      switch (coord) {
+      | Coord(_, 1) => [forward, forward |> next(South)]
+      | _ => [forward]
+      }
+    )
+    |> List.filter(emptyCell(board));
   let strikes =
     [forward, coord |> next(SouthEast), coord |> next(SouthWest)]
     |> List.filter(isStrikable(board, player));
@@ -33,10 +42,13 @@ let possibleNorthMoves =
     : list(coord) => {
   let forward = coord |> next(North);
   let coords =
-    switch (coord) {
-    | Coord(_, 6) => [forward, forward |> next(North)]
-    | _ => [forward]
-    };
+    (
+      switch (coord) {
+      | Coord(_, 6) => [forward, forward |> next(North)]
+      | _ => [forward]
+      }
+    )
+    |> List.filter(emptyCell(board));
   let strikes =
     [forward, coord |> next(NorthEast), coord |> next(NorthWest)]
     |> List.filter(isStrikable(board, player));

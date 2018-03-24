@@ -1,6 +1,6 @@
 {
   "name": "reason-chess",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/venil7/reason-chess.git"

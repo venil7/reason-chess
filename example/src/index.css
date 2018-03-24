@@ -5,67 +5,73 @@ body {
 }
 
 .cell {
+  background-image: url(svg/pieces.svg);
+  background-position-x: +100px;
+  background-repeat: no-repeat;
   display: inline-block;
-  height: 30px;
-  width: 30px;
-  /* border: 1px solid grey; */
-}
-.cell:after {
-  content: "  ";
+  height: 48px;
+  width: 48px;
 }
 
-.cell.black.knight:after {
-  content: "♞";
+.cell.black.knight {
+  background-position-y: -45px;
+  background-position-x: -135px;
 }
-.cell.black.rook:after {
-  content: "♜";
+.cell.black.rook {
+  background-position-y: -45px;
+  background-position-x: -180px;
 }
-.cell.black.bishop:after {
-  content: "♝";
+.cell.black.bishop {
+  background-position-y: -45px;
+  background-position-x: -90px;
 }
-.cell.black.pawn:after {
-  content: "♟";
+.cell.black.pawn {
+  background-position-y: -45px;
+  background-position-x: -220px;
 }
-.cell.black.king:after {
-  content: "♚";
+.cell.black.king {
+  background-position-y: -45px;
+  background-position-x: 0px;
 }
-.cell.black.queen:after {
-  content: "♛";
-}
-
-.cell.white.knight:after {
-  content: "♘";
-}
-.cell.white.rook:after {
-  content: "♖";
-}
-.cell.white.bishop:after {
-  content: "♗";
-}
-.cell.white.pawn:after {
-  content: "♙";
-}
-.cell.white.king:after {
-  content: "♔";
-}
-.cell.white.queen:after {
-  content: "♕";
+.cell.black.queen {
+  background-position-y: -45px;
+  background-position-x: -45px;
 }
 
-.cell.selected {
-  background: linear-gradient(rgba(0,0,255,.2),rgba(0,0,0,.2));
+.cell.white.knight {
+  background-position-x: -135px;
+}
+.cell.white.rook {
+  background-position-x: -180px;
+}
+.cell.white.bishop {
+  background-position-x: -90px;
+}
+.cell.white.pawn {
+  background-position-x: -220px;
+}
+.cell.white.king {
+  background-position-x: 0px;
+}
+.cell.white.queen {
+  background-position-x: -45px;
+}
+
+.cell.selected  {
+  background-color: PaleGreen !important;
+  outline: 1px solid Pink;
 }
 .cell.path {
-  background: linear-gradient(rgba(0,255,0,.2),rgba(0,0,0,.2));
+  background-color: PaleGreen !important;
 }
 .cell.attack {
-  background: linear-gradient(rgba(255,0,0,.2),rgba(0,0,0,.2));
+  background-color: Pink !important;
 }
 
 .board {
   display: block;
-  width: 264px;
-  height: 264px;
+  width: 400px;
+  height: 400px;
 }
 
 .board .cell:nth-child(-2n+8),

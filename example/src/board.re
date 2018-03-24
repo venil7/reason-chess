@@ -17,10 +17,21 @@ let initialState = () : state => {possibleCoords: [], selected: None};
 
 let moveComplete = (onMove: moveCallback, move: move, _self) => onMove(move);
 
-let highlight = (state: state, index: int) : Cell.highlight => {
+let oppositePlayers = (coord1: coord, coord2: coord, board: board) : bool =>
+  switch (board |> at(coord1), board |> at(coord2)) {
+  | (Occupied(p1, _), Occupied(p2, _)) when p1 != p2 => true
+  | _ => false
+  };
+
+let highlight = (state: state, board: board, index: int) : Cell.highlight => {
   let coord = coordOfIndex(index);
   switch (state.selected) {
   | Some(coord') when coord' == coord => Selected
+  | Some(coord')
+      when
+        oppositePlayers(coord', coord, board)
+        && List.mem(coord, state.possibleCoords) =>
+    Attack
   | _ when List.mem(coord, state.possibleCoords) => Path
   | _ => None
   };
@@ -81,7 +92,7 @@ let make = (~board: board, ~player1: player, ~onMove: moveCallback, _children) =
         |> List.mapi((index, cell) =>
              <Cell
                cell
-               highlight=(index |> highlight(self.state))
+               highlight=(index |> highlight(self.state, board))
                key=(string_of_int(index))
                coord=(coordOfIndex(index))
                onClick=(coord => self.send(Select(coord, cell)))
