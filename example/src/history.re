@@ -11,16 +11,19 @@ let component = ReasonReact.statelessComponent("History");
 let make = (~moves: list(move), _children) => {
   ...component,
   render: _self =>
-    <ul className="history">
-      (
-        moves
-        |> List.mapi((idx, move) =>
-             <li key=(string_of_int(idx))>
-               (move |> moveToStr |> ReasonReact.stringToElement)
-             </li>
-           )
-        |> Array.of_list
-        |> ReasonReact.arrayToElement
-      )
-    </ul>,
+    <div className="history">
+      <strong> ("Move history:" |> ReasonReact.stringToElement) </strong>
+      <ul>
+        (
+          moves
+          |> List.mapi((idx, move) =>
+               <li key=(string_of_int(idx))>
+                 (move |> moveToStr |> ReasonReact.stringToElement)
+               </li>
+             )
+          |> Array.of_list
+          |> ReasonReact.arrayToElement
+        )
+      </ul>
+    </div>,
 };

@@ -5,12 +5,17 @@ body {
 }
 
 .cell {
+  background-color: LightYellow;
   background-image: url(svg/pieces.svg);
   background-position-x: +100px;
   background-repeat: no-repeat;
   display: inline-block;
   height: 48px;
   width: 48px;
+}
+
+.cell:hover {
+  outline: 1px solid pink;
 }
 
 .cell.black.knight {
@@ -84,5 +89,21 @@ body {
 .board .cell:nth-child(40) ~ .cell:nth-child(-2n+47),
 .board .cell:nth-child(48) ~ .cell:nth-child(-2n+56),
 .board .cell:nth-child(56) ~ .cell:nth-child(-2n+63) {
-    background-color: #eee;
+    background-color: DarkKhaki;
+}
+.player-select {
+  display: inline-block;
+}
+
+button {
+  border: 1px solid PeachPuff;
+  margin: 4px;
+  padding: 8px 8px;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+}
+
+button.selected {
+  background-color: Khaki;
 }

@@ -4,30 +4,41 @@ open ReasonChess.Board;
 
 open ReasonChess.Minimax;
 
+open ReasonChess.Player;
+
 type state = {
-  player,
+  turn: player,
+  cpu: player,
   board,
 };
 
 type action =
-  | Move(move)
-  | Board(board);
+  | SetCpuPlayer(player) /*set CPU player */
+  | HumanMove(move) /*Human player makes move */
+  | CpuMove; /*CPU replaces the board */
 
-let initialState = () : state => {player: White, board: empty() |> default};
+let initialState = () : state => {
+  cpu: Black,
+  turn: White,
+  board: empty() |> default,
+};
 
 let reducer = (action: action, state: state) =>
   switch (action) {
-  | Move(move) =>
+  | HumanMove(move) =>
     let board' = makeMove(move, state.board);
     ReasonReact.UpdateWithSideEffects(
-      {...state, board: board'},
-      (
-        self =>
-          Js.Global.setTimeout(() => self.send(Board(board' |> cpu)), 1)
-          |> ignore
-      ),
+      {...state, board: board', turn: opposite(state.turn)},
+      (self => Js.Global.setTimeout(() => self.send(CpuMove), 1) |> ignore),
     );
-  | Board(board) => ReasonReact.Update({...state, board})
+  | CpuMove =>
+    let board = state.board |> cpu(~player=state.cpu);
+    ReasonReact.Update({...state, board, turn: opposite(state.turn)});
+  | SetCpuPlayer(player) =>
+    ReasonReact.UpdateWithSideEffects(
+      {...state, cpu: player},
+      (self => player == state.turn ? self.send(CpuMove) : ()),
+    )
   };
 
 let component = ReasonReact.reducerComponent("App");
@@ -37,9 +48,18 @@ let make = _children => {
   initialState,
   reducer,
   render: self => {
-    let {board, player} = self.state;
+    let {board, cpu, turn} = self.state;
     <div className="App">
-      <Board board onMove=(move => self.send(Move(move))) player1=player />
+      <Board
+        board
+        onMove=(move => self.send(HumanMove(move)))
+        player1=(opposite(cpu))
+      />
+      <PlayerSelect
+        turn
+        cpu
+        onSelect=(player => self.send(SetCpuPlayer(player)))
+      />
       <History moves=board.moves />
       <Captured captured=board.captured />
     </div>;
