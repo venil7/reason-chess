@@ -14,15 +14,21 @@ type cell =
   | Empty
   | Occupied(player, piece);
 
+type coord =
+  | Coord(int, int);
+
+type move = {
+  prev: coord,
+  next: coord,
+};
+
 type board = {
   cells: list(cell),
   castling: (bool, bool),
-  underCheck: option(player),
   captured: list((player, piece)),
+  winner: option(player),
+  moves: list(move),
 };
-
-type coord =
-  | Coord(int, int);
 
 type direction =
   | North
@@ -33,11 +39,6 @@ type direction =
   | SouthWest
   | West
   | NorthWest;
-
-type move = {
-  prev: coord,
-  next: coord,
-};
 
 type score = float;
 

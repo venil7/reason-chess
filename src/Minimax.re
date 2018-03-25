@@ -39,24 +39,22 @@ let nextDepth = (depth: int) => depth - 1;
 
 let rec minimax =
         (
-          board: board,
           player: player,
           depth: int,
           ~alphaBeta=defaultAlphaBeta,
           ~move: option(move)=?,
           ~maximizer=player,
-          (),
+          board: board,
         )
         : eval => {
   let depth' = float_of_int(depth);
-  let winner = winner(board);
-  switch (winner, move, depth) {
-  /* when human player got to a winnig state   */
+  switch (board.winner, move, depth) {
+  /* when human player wins the game   */
   | (Some(player), Some(move), _) when player != maximizer =>
-    Eval(move, maxScore -. depth')
-  /* when CPU player got to a winnig state */
-  | (Some(player), Some(move), _) when player == maximizer =>
     Eval(move, depth' -. maxScore)
+  /* when CPU player wins the game */
+  | (Some(player), Some(move), _) when player == maximizer =>
+    Eval(move, maxScore -. depth')
   /* when depth level has been reached */
   | (_, Some(move), 0) => Eval(move, score(board, player))
   /* when depth level hasn't been reached yet */
@@ -76,13 +74,12 @@ let rec minimax =
            } else {
              let Eval(_, score) =
                minimax(
-                 makeMove'(move'),
                  opponent,
                  nextDepth(depth),
                  ~alphaBeta=acc.ab,
                  ~move=move',
                  ~maximizer,
-                 (),
+                 makeMove'(move'),
                );
              let v' = compare(acc.v, score);
              let alpha' = compare(alpha, v');
@@ -109,7 +106,7 @@ let rec minimax =
   };
 };
 
-let cpu = (board: board, ~player=Black, ~depth: int=defaultDepth, ()) : board => {
-  let Eval(move, _) = minimax(board, player, depth, ());
+let cpu = (~player=Black, ~depth: int=defaultDepth, board: board) : board => {
+  let Eval(move, _) = board |> minimax(player, depth);
   board |> makeMove(move);
 };

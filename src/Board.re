@@ -2,6 +2,8 @@ open Game;
 
 open Coord;
 
+open Player;
+
 module PawnPiece = Piece.Make(Pawn);
 
 module RookPiece = Piece.Make(Rook);
@@ -22,7 +24,7 @@ let iterate = (board: board) : list(cell) => board.cells;
 
 let empty = () : board => {
   let cells = Array.make(side * side, Empty) |> Array.to_list;
-  {castling: (false, false), underCheck: None, captured: [], cells};
+  {castling: (false, false), captured: [], cells, winner: None, moves: []};
 };
 
 let default = (board: board) : board => {
@@ -50,22 +52,38 @@ let default = (board: board) : board => {
   {...board, cells};
 };
 
-let makeMove = ({prev, next}: move, board: board) => {
+let makeMove = (move: move, board: board) => {
+  let {prev, next} = move;
   let prevIndex = indexOfCoord(prev);
   let nextIndex = indexOfCoord(next);
+  let nextCell = board |> at(prev);
+  let prevCell = board |> at(next);
   let cells =
     board
     |> iterate
     |> List.mapi((index, cell) =>
          switch (index) {
+         /* move from */
          | idx when idx == prevIndex && cell != Empty => Empty
+         /* trying to move emty cell */
          | idx when idx == prevIndex =>
            raise(InvalidMove("cant move empty cell"))
-         | idx when idx == nextIndex => board |> at(prev)
+         /* move to */
+         | idx when idx == nextIndex => nextCell
+         /* default */
          | _ => cell
          }
        );
-  {...board, cells};
+  switch (prevCell) {
+  | Empty => {...board, cells, moves: [move, ...board.moves]}
+  | Occupied(player, piece) => {
+      ...board,
+      cells,
+      moves: [move, ...board.moves],
+      winner: piece == King ? Some(opposite(player)) : None,
+      captured: [(player, piece), ...board.captured],
+    }
+  };
 };
 
 let setAt = (piece: piece, player: player, coord: coord, board: board) : board => {
@@ -105,16 +123,3 @@ let possibleMoves = (player: player, board: board) : list(move) =>
        }
      )
   |> List.concat;
-
-let winner = (board: board) : option(player) =>
-  board
-  |> iterate
-  |> List.fold_left(
-       (acc, cell) =>
-         switch (acc, cell) {
-         | (None, Occupied(player, King)) => Some(player)
-         | (Some(_), Occupied(_, King)) => None
-         | _ => acc
-         },
-       None,
-     );

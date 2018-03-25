@@ -27,21 +27,15 @@ describe("Board", () => {
     let next = board' |> at(Coord(0, 2));
     expect((prev, next)) |> toEqual((Empty, Occupied(Black, Pawn)));
   });
-  describe("Winner", () => {
+  test("makeMove - winner", () => {
     let board = empty() |> default;
-    test("default", () =>
-      expect(winner(board)) |> toBe(None)
-    );
-    test("White", () => {
-      let board' =
-        board |> makeMove({prev: Coord(3, 0), next: Coord(4, 0)});
-      expect(winner(board')) |> toEqual(Some(White));
-    });
-    test("Black", () => {
-      let board' =
-        board |> makeMove({prev: Coord(3, 7), next: Coord(4, 7)});
-      expect(winner(board')) |> toEqual(Some(Black));
-    });
+    let board' = board |> makeMove({prev: Coord(3, 7), next: Coord(4, 0)});
+    expect(board'.winner) |> toEqual(Some(White));
+  });
+  test("makeMove - captured", () => {
+    let board = empty() |> default;
+    let board' = board |> makeMove({prev: Coord(3, 7), next: Coord(4, 0)});
+    expect(board'.captured) |> toEqual([(Black, King)]);
   });
   describe("Possible moves", () =>
     test("White", () => {
