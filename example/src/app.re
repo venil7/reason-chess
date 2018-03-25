@@ -2,6 +2,8 @@ open ReasonChess.Game;
 
 open ReasonChess.Board;
 
+open ReasonChess.Minimax;
+
 type state = {
   player,
   board,
@@ -19,7 +21,11 @@ let reducer = (action: action, state: state) =>
     let board' = makeMove(move, state.board);
     ReasonReact.UpdateWithSideEffects(
       {...state, board: board'},
-      (self => self.send(Board(ReasonChess.Minimax.cpu(board', ())))),
+      (
+        self =>
+          Js.Global.setTimeout(() => self.send(Board(board' |> cpu)), 1)
+          |> ignore
+      ),
     );
   | Board(board) => ReasonReact.Update({...state, board})
   };

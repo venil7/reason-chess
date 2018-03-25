@@ -6,7 +6,8 @@
     "bs-platform": "^2.2.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "reason-chess": "^1.0.5",
+    "reason-chess": "^1.0.6",
+    "reason-cli": "^3.1.0-darwin",
     "reason-scripts": "0.8.0"
   },
   "scripts": {
