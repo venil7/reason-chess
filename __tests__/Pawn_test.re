@@ -15,24 +15,32 @@ describe("Pawn", () => {
       let board = empty() |> setAt(Pawn, Black, coord); /*piece under test*/
       let coords = Pawn.possibleMoves(coord, board, Black) |> Array.of_list;
       expect(coords)
-      |> toEqual([|coord |> next(South), coord |> next(South) |> next(South)|]);
+      |> toBeSupersetOf([|
+           coord |> next(South),
+           coord |> next(South) |> next(South),
+         |]);
     });
     test("possible moves (2 attack), frontline", () => {
       let coord = Coord(4, 1);
       let board =
         empty()
-        |> setAt(Pawn, Black, coord) /*piece under test*/
+        |> setAt(Pawn, Black, coord)  /*piece under test*/
         |> setAt(Pawn, White, Coord(3, 2))
         |> setAt(Pawn, White, Coord(5, 2));
       let coords = Pawn.possibleMoves(coord, board, Black) |> Array.of_list;
       expect(coords)
-      |> toBeSupersetOf([|Coord(4, 2), Coord(4, 3), Coord(3, 2), Coord(5, 2)|]);
+      |> toBeSupersetOf([|
+           Coord(4, 2),
+           Coord(4, 3),
+           Coord(3, 2),
+           Coord(5, 2),
+         |]);
     });
     test("possible moves (1 attack), frontline", () => {
       let coord = Coord(4, 1);
       let board =
         empty()
-        |> setAt(Pawn, Black, coord) /*piece under test*/
+        |> setAt(Pawn, Black, coord)  /*piece under test*/
         |> setAt(Pawn, White, Coord(5, 2));
       let coords = Pawn.possibleMoves(coord, board, Black) |> Array.of_list;
       expect(coords)
@@ -42,7 +50,7 @@ describe("Pawn", () => {
       let coord = Coord(4, 1);
       let board =
         empty()
-        |> setAt(Pawn, Black, coord) /*piece under test*/
+        |> setAt(Pawn, Black, coord)  /*piece under test*/
         |> setAt(Pawn, Black, Coord(3, 2))
         |> setAt(Pawn, White, Coord(5, 2));
       let coords = Pawn.possibleMoves(coord, board, Black) |> Array.of_list;
@@ -53,7 +61,7 @@ describe("Pawn", () => {
       let coord = Coord(4, 2);
       let board =
         empty()
-        |> setAt(Pawn, Black, coord) /*piece under test*/
+        |> setAt(Pawn, Black, coord)  /*piece under test*/
         |> setAt(Pawn, White, Coord(3, 3))
         |> setAt(Pawn, White, Coord(5, 3));
       let coords = Pawn.possibleMoves(coord, board, Black) |> Array.of_list;
@@ -66,30 +74,47 @@ describe("Pawn", () => {
       let coords = Pawn.possibleMoves(coord, board, Black) |> Array.of_list;
       expect(coords) |> toBeSupersetOf([||]);
     });
+    test("possible moves (3), attack and move", () => {
+      let coord = Coord(3, 1);
+      let board =
+        empty()
+        |> default
+        |> setAt(Pawn, White, Coord(2, 2))
+        |> setAt(Pawn, White, Coord(3, 3))
+        |> setAt(Pawn, White, Coord(4, 2));
+      let coords = Pawn.possibleMoves(coord, board, Black) |> Array.of_list;
+      expect([|Coord(2, 2), Coord(3, 2), Coord(4, 2)|])
+      |> toBeSupersetOf(coords);
+    });
   });
   describe("White", () => {
     test("possible moves (no attack), frontline", () => {
       let coord = Coord(3, 6);
       let board = empty() |> setAt(Pawn, White, coord); /*piece under test*/
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
-      expect(coords) |> toEqual([|Coord(3, 5), Coord(3, 4)|]);
+      expect(coords) |> toBeSupersetOf([|Coord(3, 5), Coord(3, 4)|]);
     });
     test("possible moves (2 attack), frontline", () => {
       let coord = Coord(3, 6);
       let board =
         empty()
-        |> setAt(Pawn, White, coord) /*piece under test*/
+        |> setAt(Pawn, White, coord)  /*piece under test*/
         |> setAt(Pawn, Black, Coord(2, 5))
         |> setAt(Pawn, Black, Coord(4, 5));
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
       expect(coords)
-      |> toBeSupersetOf([|Coord(2, 5), Coord(3, 5), Coord(4, 5), Coord(3, 4)|]);
+      |> toBeSupersetOf([|
+           Coord(2, 5),
+           Coord(3, 5),
+           Coord(4, 5),
+           Coord(3, 4),
+         |]);
     });
     test("possible moves (1 attack), frontline", () => {
       let coord = Coord(4, 6);
       let board =
         empty()
-        |> setAt(Pawn, White, coord) /*piece under test*/
+        |> setAt(Pawn, White, coord)  /*piece under test*/
         |> setAt(Pawn, Black, Coord(5, 5));
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
       expect(coords)
@@ -99,7 +124,7 @@ describe("Pawn", () => {
       let coord = Coord(4, 6);
       let board =
         empty()
-        |> setAt(Pawn, White, coord) /*piece under test*/
+        |> setAt(Pawn, White, coord)  /*piece under test*/
         |> setAt(Pawn, Black, Coord(3, 5))
         |> setAt(Pawn, White, Coord(5, 5));
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
@@ -110,7 +135,7 @@ describe("Pawn", () => {
       let coord = Coord(4, 5);
       let board =
         empty()
-        |> setAt(Pawn, White, coord) /*piece under test*/
+        |> setAt(Pawn, White, coord)  /*piece under test*/
         |> setAt(Pawn, Black, Coord(3, 4))
         |> setAt(Pawn, Black, Coord(5, 4));
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
@@ -121,7 +146,18 @@ describe("Pawn", () => {
       let coord = Coord(7, 0);
       let board = empty() |> setAt(Pawn, White, coord) /*piece under test*/;
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
-      expect(coords) |> toBeSupersetOf([||]);
+      expect([||]) |> toBeSupersetOf(coords);
+    });
+    test("possible moves (2), attack only", () => {
+      let coord = Coord(3, 6);
+      let board =
+        empty()
+        |> default
+        |> setAt(Pawn, Black, Coord(2, 5))
+        |> setAt(Pawn, Black, Coord(3, 5))
+        |> setAt(Pawn, Black, Coord(4, 5));
+      let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
+      expect([|Coord(2, 5), Coord(4, 5)|]) |> toBeSupersetOf(coords);
     });
   });
 });

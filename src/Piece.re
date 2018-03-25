@@ -13,6 +13,8 @@ let isWalkable =
 
 let allTheWay =
     (
+      ~count: int=8,
+      ~attack: bool=true,
       board: Game.board,
       player: Game.player,
       direction: Game.direction,
@@ -21,6 +23,8 @@ let allTheWay =
     : list(Game.coord) => {
   let rec allTheWay' =
           (
+            ~count=8,
+            ~attack=true,
             board: Game.board,
             player: Game.player,
             direction: Game.direction,
@@ -29,18 +33,24 @@ let allTheWay =
           )
           : list(Game.coord) => {
     let step = coord |> next(direction);
-    if (isValid(step)) {
+    isValid(step) && count > 0 ?
       switch (board |> at(step)) {
       | Game.Occupied(plyr, _) when plyr == player => steps
-      | Game.Occupied(_, _) => [step, ...steps]
+      | Game.Occupied(_, _) => attack ? [step, ...steps] : steps
       | Game.Empty =>
-        allTheWay'(board, player, direction, step, [step, ...steps])
-      };
-    } else {
+        allTheWay'(
+          ~count=count - 1,
+          ~attack,
+          board,
+          player,
+          direction,
+          step,
+          [step, ...steps],
+        )
+      } :
       steps;
-    };
   };
-  allTheWay'(board, player, direction, coord, []);
+  allTheWay'(~count, ~attack, board, player, direction, coord, []);
 };
 
 let allTheWays =

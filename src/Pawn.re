@@ -2,12 +2,6 @@ open Coord;
 
 open Game;
 
-let emptyCell = (board: board, coord: coord) : bool =>
-  switch (board |> at(coord)) {
-  | Occupied(_, _) => false
-  | _ => true
-  };
-
 let isStrikable =
     (board: Game.board, player: Game.player, coord: Game.coord)
     : bool =>
@@ -19,38 +13,42 @@ let isStrikable =
     }
   );
 
-let possibleSouthMoves =
-    (coord: coord, board: board, player: player)
-    : list(coord) => {
-  let forward = coord |> next(South);
-  let coords =
-    (
-      switch (coord) {
-      | Coord(_, 1) => [forward, forward |> next(South)]
-      | _ => [forward]
-      }
-    )
-    |> List.filter(emptyCell(board));
-  let strikes =
-    [forward, coord |> next(SouthEast), coord |> next(SouthWest)]
-    |> List.filter(isStrikable(board, player));
-  strikes @ coords;
-};
+let sideAttacks = (player: player) : (direction, direction) =>
+  switch (player) {
+  | White => (NorthEast, NorthWest)
+  | Black => (SouthEast, SouthWest)
+  };
 
-let possibleNorthMoves =
-    (coord: coord, board: board, player: player)
+let possibleMoves' =
+    (coord: coord, board: board, player: player, direction: direction)
     : list(coord) => {
-  let forward = coord |> next(North);
   let coords =
     (
       switch (coord) {
-      | Coord(_, 6) => [forward, forward |> next(North)]
-      | _ => [forward]
+      | Coord(_, 1 | 6) =>
+        Piece.allTheWay(
+          ~count=2,
+          ~attack=false,
+          board,
+          player,
+          direction,
+          coord,
+        )
+      | _ =>
+        Piece.allTheWay(
+          ~count=1,
+          ~attack=false,
+          board,
+          player,
+          direction,
+          coord,
+        )
       }
     )
-    |> List.filter(emptyCell(board));
+    |> List.filter(isValid);
+  let (dir1, dir2) = sideAttacks(player);
   let strikes =
-    [forward, coord |> next(NorthEast), coord |> next(NorthWest)]
+    [coord |> next(dir1), coord |> next(dir2)]
     |> List.filter(isStrikable(board, player));
   strikes @ coords;
 };
@@ -60,8 +58,8 @@ let possibleMoves =
     : list(coord) => {
   let moves =
     switch (player) {
-    | Black => possibleSouthMoves(coord, board, Black)
-    | White => possibleNorthMoves(coord, board, White)
+    | Black => possibleMoves'(coord, board, Black, South)
+    | White => possibleMoves'(coord, board, White, North)
     };
   moves |> List.filter(isValid);
 };
