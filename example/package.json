@@ -2,7 +2,7 @@
   "name": "example",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://venil7.github.io/reason-chess",
+  "homepage": "https://venil7.github.io/reason-chess",
   "dependencies": {
     "bs-platform": "^2.2.2",
     "react": "^16.2.0",
