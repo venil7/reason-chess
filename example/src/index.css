@@ -58,8 +58,7 @@ body {
 }
 
 .cell.selected  {
-  background-color: PaleGreen !important;
-  outline: 1px solid Pink;
+  background-color: palegoldenrod !important;
 }
 .cell.path {
   background-color: PaleGreen !important;
@@ -69,9 +68,12 @@ body {
 }
 
 .board {
-  display: block;
+  display: inline-block;
   width: 400px;
   height: 400px;
+}
+.history, .captured {
+  display: inline-block;
 }
 
 .board .cell:nth-child(-2n+8),

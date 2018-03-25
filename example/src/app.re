@@ -40,6 +40,8 @@ let make = _children => {
     let {board, player} = self.state;
     <div className="App">
       <Board board onMove=(move => self.send(Move(move))) player1=player />
+      <History moves=board.moves />
+      <Captured captured=board.captured />
     </div>;
   },
 };
