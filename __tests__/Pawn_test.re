@@ -86,6 +86,13 @@ describe("Pawn", () => {
       expect([|Coord(2, 2), Coord(3, 2), Coord(4, 2)|])
       |> toBeSupersetOf(coords);
     });
+    test("promotion", () => {
+      let prev = Coord(3, 6);
+      let next = Coord(3, 7);
+      let board = empty() |> setAt(Occupied(Black, Pawn), prev);
+      let cell = board |> makeMove({prev, next}) |> at(next);
+      expect(cell) |> toEqual(Occupied(Black, Queen));
+    });
   });
   describe("White", () => {
     test("possible moves (no attack), frontline", () => {
@@ -158,6 +165,13 @@ describe("Pawn", () => {
         |> setAt(Occupied(Black, Pawn), Coord(4, 5));
       let coords = Pawn.possibleMoves(coord, board, White) |> Array.of_list;
       expect([|Coord(2, 5), Coord(4, 5)|]) |> toBeSupersetOf(coords);
+    });
+    test("promotion", () => {
+      let prev = Coord(4, 1);
+      let next = Coord(4, 0);
+      let board = empty() |> setAt(Occupied(White, Pawn), prev);
+      let cell = board |> makeMove({prev, next}) |> at(next);
+      expect(cell) |> toEqual(Occupied(White, Queen));
     });
   });
 });
