@@ -24,7 +24,7 @@ describe("Eval", () => {
       let board' =
         board
         |> makeMove({prev: Coord(4, 6), next: Coord(7, 5)})
-        |> setAt(Queen, Black, Coord(4, 4))
+        |> setAt(Occupied(Black, Queen), Coord(4, 4))
         |> cpu(~depth=2);
       expect(board'.winner) |> toEqual(Some(Black));
     })

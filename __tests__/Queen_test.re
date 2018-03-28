@@ -9,7 +9,7 @@ open Expect;
 describe("Queen", () => {
   let board = empty() |> default;
   test("possible steps", () => {
-    let board = board |> setAt(Queen, Black, Coord(3, 3));
+    let board = board |> setAt(Occupied(Black, Queen), Coord(3, 3));
     let moves =
       Queen.possibleMoves(Coord(3, 3), board, Black) |> Array.of_list;
     expect(moves)
@@ -32,7 +32,7 @@ describe("Queen", () => {
          Coord(3, 2),
          Coord(3, 4),
          Coord(3, 5),
-         Coord(3, 6)
+         Coord(3, 6),
        |]);
   });
 });

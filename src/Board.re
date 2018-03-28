@@ -52,31 +52,39 @@ let default = (board: board) : board => {
   {...board, cells};
 };
 
-let makeMove = (move: move, board: board) => {
-  let {prev, next} = move;
-  let prevIndex = indexOfCoord(prev);
-  let nextIndex = indexOfCoord(next);
-  let nextCell = board |> at(prev);
-  let prevCell = board |> at(next);
+let setAt = (cell: cell, coord: coord, board: board) : board => {
+  let setIndex = indexOfCoord(coord);
   let cells =
     board
     |> iterate
-    |> List.mapi((index, cell) =>
+    |> List.mapi((index, cell') =>
          switch (index) {
-         /* move from */
-         | idx when idx == prevIndex && cell != Empty => Empty
-         /* trying to move emty cell */
-         | idx when idx == prevIndex =>
-           raise(InvalidMove("cant move empty cell"))
-         /* move to */
-         | idx when idx == nextIndex => nextCell
-         /* default */
-         | _ => cell
+         | idx when idx == setIndex => cell
+         | _ => cell'
          }
        );
-  switch (prevCell) {
-  | Empty => {...board, cells, moves: [move, ...board.moves]}
-  | Occupied(player, piece) => {
+  {...board, cells};
+};
+
+let makeMove = (move: move, board: board) => {
+  let {prev, next} = move;
+  let srcCell = board |> at(prev);
+  let destCell = board |> at(next);
+  let nextCell =
+    switch (next, srcCell) {
+    | (Coord(_, 0), Occupied(White, Pawn)) => Occupied(White, Queen)
+    | (Coord(_, 7), Occupied(Black, Pawn)) => Occupied(Black, Queen)
+    | _ => srcCell
+    };
+  let {cells} = board |> setAt(Empty, prev) |> setAt(nextCell, next);
+  switch (srcCell, destCell) {
+  | (Empty, _) => raise(InvalidMove("cant move empty cell"))
+  | (Occupied(_, _), Empty) => {
+      ...board,
+      cells,
+      moves: [move, ...board.moves],
+    }
+  | (Occupied(_), Occupied(player, piece)) => {
       ...board,
       cells,
       moves: [move, ...board.moves],
@@ -84,20 +92,6 @@ let makeMove = (move: move, board: board) => {
       captured: [(player, piece), ...board.captured],
     }
   };
-};
-
-let setAt = (piece: piece, player: player, coord: coord, board: board) : board => {
-  let setIndex = indexOfCoord(coord);
-  let cells =
-    board
-    |> iterate
-    |> List.mapi((index, cell) =>
-         switch (index) {
-         | idx when idx == setIndex => Occupied(player, piece)
-         | _ => cell
-         }
-       );
-  {...board, cells};
 };
 
 let possiblePieceMoves =
